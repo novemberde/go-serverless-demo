@@ -11,10 +11,14 @@ let todos = [];
 
 function fetchTodos() {
 	axios.get('/Test').then((res) => {
-		console.log(res.data)
-		todos = res.data.sort((a, b) => {
-			return a.CreatedAt > b.CreatedAt
+		if(!res.data) {
+			return
+		}
+		todos = res.data;
+		todos.sort((a, b) => {
+			return  new Date(b.created_at) - new Date(a.created_at)
 		})
+		console.log(todos)
 	})
 }
 
@@ -28,14 +32,26 @@ function handleSubmit(e) {
 	}).then((res) => {
 		console.log(res.data);
 		fetchTodos()
+		content = ""
 	}).catch((err) => {
 		console.log(err);
 	});
 
 }
 
+function handleCheck(todo) {
+
+	axios.put('/Test/' + todo.created_at, {
+		checked: !todo.checked
+	}).then((res) => {
+		console.log(res.data);
+		fetchTodos()
+	}).catch((err) => {
+		console.log(err);
+	});
+}
+
 fetchTodos()
-///////////
 
 </script>
 <section class="todoapp">
@@ -50,10 +66,10 @@ fetchTodos()
 			{#each todos as todo}
 				<li>
 					<div class="view">
-						{#if todo.checked_at}
-						<input class="toggle" type="checkbox" checked>
+						{#if todo.checked}
+						<input class="toggle" type="checkbox" on:click={() => handleCheck(todo)} checked>
 						{:else}
-						<input class="toggle" type="checkbox">
+						<input class="toggle" type="checkbox" on:click={() => handleCheck(todo)}>
 						{/if}
 						<label>{todo.content}</label>
 						<!-- <input class="new-todo" type="text" value="hihi" readonly> -->
