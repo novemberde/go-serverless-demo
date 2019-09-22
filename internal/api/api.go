@@ -16,7 +16,7 @@ func New() *echo.Echo {
 	d := db.New(os.Getenv("DYNAMO_REGION"), os.Getenv("DYNAMO_TABLE_NAME"))
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5000", "http://novemberde-go-todo.s3-website.ap-northeast-2.amazonaws.com/", "https://d1ek9bfmwa0wns.cloudfront.net/"},
+		AllowOrigins: []string{"http://localhost:5000", "http://novemberde-go-todo.s3-website.ap-northeast-2.amazonaws.com", "https://d1ek9bfmwa0wns.cloudfront.net"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete, http.MethodOptions},
 	}))
 	e.GET("/", func(c echo.Context) error {
