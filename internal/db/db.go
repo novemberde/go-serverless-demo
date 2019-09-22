@@ -33,7 +33,7 @@ type Todo struct {
 	Meta      string    `json:"meta,omitempty" dynamo:"Meta"`
 	UpdatedAt time.Time `json:"updated_at" dynamo:"UpdatedAt"`
 	DeletedAt time.Time `json:"deleted_at,omitempty" dynamo:"DeletedAt"`
-	CheckedAt time.Time `json:"checked_at,omitempty" dynamo:"CheckedAt"`
+	Checked   bool      `json:"checked" dynamo:"Checked"`
 }
 
 // New ...
@@ -74,8 +74,14 @@ func (db *DB) Create(t *Todo) error {
 
 // Update ...
 func (db *DB) Update(t *Todo) error {
-	return db.todo.Update("pk", t.Username).Range("sk", t.CreatedAt).
-		Set("Content", t.Content).
+	q := db.todo.Update("pk", t.Username).Range("sk", t.CreatedAt)
+
+	if t.Content != "" {
+		q.Set("Content", t.Content)
+	}
+	q.SetExpr("Checked=?", t.Checked)
+
+	return q.
 		Set("UpdatedAt", time.Now()).
 		Run()
 }
