@@ -11,8 +11,20 @@ DYNAMO_REGION: ap-northeast-2
 DYNAMO_TABLE_NAME: go-todo
 ```
 
+2. Create your dynamodb table(go-todo)
+
+3. Build and Deploy
+
+```sh
+$ make deploy
+```
+
 ## Test
 
 ```sh
 $ go test -v $(go list ./... | grep -v vendor) -timeout 15s --count 1 -race -coverprofile=c.out -covermode=atomic
 ```
+
+## License
+
+[MIT License](/LICENSE)
