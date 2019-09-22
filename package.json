@@ -1,0 +1,24 @@
+{
+  "name": "go-serverless-demo",
+  "version": "1.0.0",
+  "description": "Build a todo app using golang with serverless framework.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novemberde/go-serverless-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/novemberde/go-serverless-demo/issues"
+  },
+  "homepage": "https://github.com/novemberde/go-serverless-demo#readme",
+  "devDependencies": {
+    "serverless": "^1.52.2",
+    "serverless-apigw-binary": "^0.4.4"
+  }
+}

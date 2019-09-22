@@ -20,20 +20,20 @@ type DB struct {
 // User ...
 type User struct {
 	PK        string    `dynamo:"pk,omitempty"`
-	Username  string    `dynamo:"sk,omitempty"`
-	CreatedAt time.Time `dynamo:"CreatedAt,omitempty"`
+	Username  string    `json:"username,omitempty" dynamo:"sk"`
+	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"CreatedAt,omitempty"`
 }
 
 // Todo ...
 type Todo struct {
-	Username  string    `dynamo:"pk,omitempty"` // pk
-	CreatedAt time.Time `dynamo:"sk,omitempty"` // sk
-
-	Content   string    `dynamo:"Content"`
-	Meta      string    `dynamo:"Meta,omitempty"`
-	UpdatedAt time.Time `dynamo:"UpdatedAt"`
-	DeletedAt time.Time `dynamo:"DeletedAt,omitempty"`
-	CheckedAt time.Time `dynamo:"CheckedAt,omitempty"`
+	Username  string    `json:"username,omitempty" dynamo:"pk"`   // pk
+	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"sk"` // sk
+	Content   string    `json:"content" dynamo:"Content"`
+	UserAgent string    `dynamo:"UserAgent,omitempty"`
+	Meta      string    `json:"meta,omitempty" dynamo:"Meta"`
+	UpdatedAt time.Time `json:"updated_at" dynamo:"UpdatedAt"`
+	DeletedAt time.Time `json:"deleted_at,omitempty" dynamo:"DeletedAt"`
+	CheckedAt time.Time `json:"checked_at,omitempty" dynamo:"CheckedAt"`
 }
 
 // New ...
@@ -67,6 +67,8 @@ func (db *DB) deleteUser(username string) error {
 
 // Create ...
 func (db *DB) Create(t *Todo) error {
+	t.CreatedAt = time.Now()
+	t.UpdatedAt = time.Now()
 	return db.todo.Put(t).Run()
 }
 
@@ -93,9 +95,9 @@ func (db *DB) Check(t *Todo) error {
 }
 
 // Find ...
-func (db *DB) Find() ([]Todo, error) {
+func (db *DB) Find(username string) ([]Todo, error) {
 	var todos []Todo
-	err := db.todo.Scan().All(&todos)
+	err := db.todo.Get("pk", username).All(&todos)
 
 	if err != nil {
 		return nil, err

@@ -1,0 +1,50 @@
+service: go-todo
+
+frameworkVersion: '>=1.28.0 <2.0.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: dev
+  region: ap-northeast-2
+  deploymentBucket: ${file(./.go-serverless-demo.yml):DEPLOYMENT_BUCKET}
+  environment:
+    DYNAMO_REGION: ${file(./.go-serverless-demo.yml):DYNAMO_REGION}
+    DYNAMO_TABLE_NAME: ${file(./.go-serverless-demo.yml):DYNAMO_TABLE_NAME}
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb:Query
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - dynamodb:UpdateItem
+      - dynamodb:DeleteItem
+    Resource: "arn:aws:dynamodb:ap-northeast-2:*:table/*"
+
+plugins:
+ - serverless-apigw-binary
+custom:
+  apigwBinary:
+    types:
+      - 'application/json'
+      - 'text/html'
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  rest:
+    handler: bin/rest
+    events:
+      - http: 
+          path: /{proxy+}
+          method: ANY
+          cors: true
+      - http: 
+          path: /{proxy+}
+          method: OPTIONS
+          cors: true

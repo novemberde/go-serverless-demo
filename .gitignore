@@ -11,3 +11,9 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 .envrc
+
+node_modules
+bin/**
+.serverless
+.go-serverless-demo.yml
+bundle.*
