@@ -17,3 +17,4 @@ bin/**
 .serverless
 .go-serverless-demo.yml
 bundle.*
+.DS_Store
