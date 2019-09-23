@@ -50,19 +50,6 @@ func TestDB_Create(t *testing.T) {
 			},
 			true,
 		},
-		{
-			"invaild CreatedAt",
-			fields{
-				todo: db.todo,
-			},
-			args{
-				t: &Todo{
-					Username: "Test",
-					Content:  "Hello World",
-				},
-			},
-			true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

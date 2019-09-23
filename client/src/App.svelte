@@ -86,6 +86,7 @@
     font-size: 100%;
     vertical-align: baseline;
     font-family: inherit;
+    cursor: pointer;
     font-weight: inherit;
     color: inherit;
     -webkit-appearance: none;

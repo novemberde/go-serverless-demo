@@ -103,7 +103,7 @@ func (db *DB) Check(t *Todo) error {
 // Find ...
 func (db *DB) Find(username string) ([]Todo, error) {
 	var todos []Todo
-	err := db.todo.Get("pk", username).All(&todos)
+	err := db.todo.Get("pk", username).Range("DeletedAt", dynamo.Equal, time.Time{}).All(&todos)
 
 	if err != nil {
 		return nil, err
