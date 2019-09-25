@@ -3,6 +3,7 @@
 
   axios.defaults.baseURL =
     "https://zod4qdelme.execute-api.ap-northeast-2.amazonaws.com/dev";
+    // "http://localhost:8080"
   axios.defaults.headers = {
     "Content-Type": "application/json"
   };

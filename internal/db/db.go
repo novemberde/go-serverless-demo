@@ -88,8 +88,7 @@ func (db *DB) Update(t *Todo) error {
 
 // Delete ...
 func (db *DB) Delete(t *Todo) error {
-	return db.todo.Update("pk", t.Username).Range("sk", t.CreatedAt).
-		Set("DeletedAt", time.Now()).
+	return db.todo.Delete("pk", t.Username).Range("sk", t.CreatedAt).
 		Run()
 }
 
@@ -103,7 +102,7 @@ func (db *DB) Check(t *Todo) error {
 // Find ...
 func (db *DB) Find(username string) ([]Todo, error) {
 	var todos []Todo
-	err := db.todo.Get("pk", username).Range("DeletedAt", dynamo.Equal, time.Time{}).All(&todos)
+	err := db.todo.Get("pk", username).All(&todos)
 
 	if err != nil {
 		return nil, err
