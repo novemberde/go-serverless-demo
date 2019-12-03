@@ -13,9 +13,18 @@ DYNAMO_TABLE_NAME: go-todo
 
 2. Create your dynamodb table(go-todo)
 
-3. Build and Deploy
+3. Run App
+
+- local
 
 ```sh
+$ go run main.go dev
+```
+
+- serverless
+
+```sh
+## Build and Deploy
 $ make deploy
 ```
 
