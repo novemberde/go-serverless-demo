@@ -18,7 +18,7 @@ type handler struct {
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	e := api.New()
 
-	h := echoLambda.New(e)
+	h := echoLambda.New(e.Echo)
 
 	return h.ProxyWithContext(ctx, req)
 }
