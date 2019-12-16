@@ -11,6 +11,8 @@ provider:
   environment:
     DYNAMO_REGION: ${file(./.go-serverless-demo.yml):DYNAMO_REGION}
     DYNAMO_TABLE_NAME: ${file(./.go-serverless-demo.yml):DYNAMO_TABLE_NAME}
+  tracing:
+    lambda: true
   iamRoleStatements:
   - Effect: Allow
     Action:
@@ -39,6 +41,8 @@ package:
 functions:
   rest:
     handler: bin/rest
+    timeout: 2 # optional, in seconds, default is 6
+    # provisionedConcurrency: 1 # optional, Count of provisioned lambda instances
     events:
       - http: 
           path: /{proxy+}
