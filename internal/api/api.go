@@ -26,6 +26,7 @@ func New() *API {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
 			"http://localhost:5000",
+			"https://go-todo.judoka.dev",
 			"http://novemberde-go-todo.s3-website.ap-northeast-2.amazonaws.com",
 			"https://d1ek9bfmwa0wns.cloudfront.net"},
 		AllowMethods: []string{
