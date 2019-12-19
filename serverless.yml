@@ -37,6 +37,7 @@ package:
     - ./**
   include:
     - ./bin/**
+    - ./.go-serverless-demo.yml
 
 functions:
   rest:

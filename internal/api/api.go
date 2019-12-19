@@ -3,10 +3,10 @@ package api
 import (
 	db "go-serverless-demo/internal/db"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/spf13/viper"
 )
 
 // API hold echo instance
@@ -20,7 +20,7 @@ func New() *API {
 	e := echo.New()
 	a := &API{
 		Echo: e,
-		db:   db.New(viper.GetString("DYNAMO_REGION"), viper.GetString("DYNAMO_TABLE_NAME")),
+		db:   db.New(os.Getenv("DYNAMO_REGION"), os.Getenv("DYNAMO_TABLE_NAME")),
 	}
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

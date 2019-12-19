@@ -1,6 +1,7 @@
 <script>
   import axios from "axios";
 
+  // axios.defaults.baseURL = "http://localhost:8080";
   axios.defaults.baseURL = "https://zod4qdelme.execute-api.ap-northeast-2.amazonaws.com/dev";
   axios.defaults.headers = {
     "Content-Type": "application/json"
@@ -8,6 +9,7 @@
   let content = "";
   let base_url = "";
   let todos = [];
+  let allChecked = false;
 
   function fetchTodos() {
     axios.get("/Test").then(res => {
@@ -87,6 +89,32 @@
       });
   }
 
+  function markAsAllComplete() {
+    todos.map(todo => {
+      if (todo.checked) return;
+      axios
+       .put("/Test/" + todo.created_at, {
+         ...todo,
+         checked: true,
+       })
+       .then(res => {
+         console.log(res.data);
+         fetchTodos();
+       })
+       .catch(err => {
+         console.log(err);
+       });
+    })
+  }
+
+  function clearCompleted() {
+    todos.map(todo => {
+      if (!todo.checked) return;
+
+      handleDelete(todo)
+    })
+  }
+
   fetchTodos();
 </script>
 <style>
@@ -101,6 +129,11 @@
 }
 .item {
   display: flex;
+}
+.delete {
+  margin-left: 10px;
+  cursor: pointer;
+  color: red;
 }
 </style>
 
@@ -119,13 +152,13 @@
       <div href="#/" class="selected">All</div>
       <div href="#/active">Active</div>
       <div href="#/completed">Completed</div>
-      <button class="clear-completed">Clear completed</button>
+      <button class="clear-completed" on:click="{clearCompleted}">Clear completed</button>
     </ul>
   </section>
   <section>
     <ul class="todo-list">
       <div class='complete-all'>
-        <input id="toggle-all" type="checkbox"/>
+        <input id="toggle-all" type="checkbox" on:change="{markAsAllComplete}" checked="{allChecked}"/>
         <label for="toggle-all">Mark all as complete</label>
       </div>
       {#each todos as todo}
@@ -148,9 +181,7 @@
               <label on:click={() => todo.active=true}>{todo.content}</label>
               {/if}
             </div>
-            <button
-              type="button"
-              on:click={() => handleDelete(todo)}>delete</button>
+            <div class="delete" on:click={() => handleDelete(todo)}>delete</div>
           </div>
         </li>
       {/each}
