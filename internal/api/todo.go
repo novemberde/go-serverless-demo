@@ -1,14 +1,15 @@
 package api
 
 import (
-	db "go-serverless-demo/internal/db"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo"
+
+	"go-serverless-demo/internal/db"
 )
 
-func (a *API) getTodos(c echo.Context) error {
+func (a *API) GetTodos(c echo.Context) error {
 	un := c.Param("username")
 	todos, err := a.db.Find(un)
 	if err != nil {
@@ -17,7 +18,7 @@ func (a *API) getTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, todos)
 }
 
-func (a *API) newTodo(c echo.Context) error {
+func (a *API) NewTodo(c echo.Context) error {
 	un := c.Param("username")
 	t := new(db.Todo)
 	if err := c.Bind(t); err != nil {
@@ -32,7 +33,7 @@ func (a *API) newTodo(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "created")
 }
 
-func (a *API) updateTodo(c echo.Context) error {
+func (a *API) UpdateTodo(c echo.Context) error {
 	un := c.Param("username")
 	ca := c.Param("created_at")
 	t := new(db.Todo)
@@ -53,7 +54,7 @@ func (a *API) updateTodo(c echo.Context) error {
 	return c.JSON(http.StatusNoContent, "updated")
 }
 
-func (a *API) deleteTodo(c echo.Context) error {
+func (a *API) DeleteTodo(c echo.Context) error {
 	un := c.Param("username")
 	ca := c.Param("created_at")
 
