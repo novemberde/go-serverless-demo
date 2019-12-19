@@ -189,7 +189,7 @@
   </section>
 </section>
 <footer class="info">
-  <p>Double-click to edit a todo</p>
+  <p>Click to edit a todo</p>
   <p>
     Written by
     <a href="https://github.com/novemberde">Novemberde</a>
