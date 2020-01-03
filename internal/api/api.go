@@ -41,15 +41,7 @@ func New() *API {
 	e.POST("/:username", a.newTodo)
 	e.PUT("/:username/:created_at", a.updateTodo)
 	e.DELETE("/:username/:created_at", a.deleteTodo)
-	e.POST("/user", func(c echo.Context) error {
-		un := c.Param("username")
-
-		if err := a.db.AddUser(un); err != nil {
-			return c.String(http.StatusInternalServerError, err.Error())
-		}
-
-		return c.String(http.StatusOK, "ok")
-	})
+	e.POST("/user", a.newUser)
 
 	return a
 }
