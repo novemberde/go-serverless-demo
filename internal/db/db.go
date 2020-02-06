@@ -97,13 +97,6 @@ func (db *DB) Delete(t *Todo) error {
 	return db.todo.Delete("pk", t.Username).Range("sk", t.CreatedAt).Run()
 }
 
-// Check ...
-func (db *DB) Check(t *Todo) error {
-	return db.todo.Update("pk", t.Username).Range("sk", t.CreatedAt).
-		Set("CheckedAt", time.Now()).
-		Run()
-}
-
 // Find ...
 func (db *DB) Find(username string) ([]Todo, error) {
 	var todos []Todo
