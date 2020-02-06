@@ -2,6 +2,7 @@ package handler
 
 import (
 	"crypto/sha1"
+	"encoding/hex"
 	"log"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ type User struct {
 func pk(username string) string {
 	h := sha1.New()
 	h.Write([]byte(username))
-	return string(h.Sum(nil))
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 // Todo ...
