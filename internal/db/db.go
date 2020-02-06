@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/sha1"
 	"log"
 	"strings"
 	"time"
@@ -10,8 +11,6 @@ import (
 	"github.com/guregu/dynamo"
 )
 
-const usersPartitionKey = "Hl4WRzKE7yvYCz4PFn4O6CFD01lBVL1"
-
 // DB ...
 type DB struct {
 	todo dynamo.Table
@@ -19,15 +18,21 @@ type DB struct {
 
 // User ...
 type User struct {
-	PK        string    `dynamo:"pk,omitempty"`
-	Username  string    `json:"username,omitempty" dynamo:"sk"`
-	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"CreatedAt,omitempty"`
+	ID        string    `dynamo:"pk,hash"`
+	Username  string    `json:"username,omitempty" dynamo:"sk,range"`
+	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"CreatedAt"`
+}
+
+func pk(username string) string {
+	h := sha1.New()
+	h.Write([]byte(username))
+	return string(h.Sum(nil))
 }
 
 // Todo ...
 type Todo struct {
-	Username  string    `json:"username,omitempty" dynamo:"pk"`   // pk
-	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"sk"` // sk
+	Username  string    `json:"username,omitempty" dynamo:"pk,hash"`    // pk
+	CreatedAt time.Time `json:"created_at,omitempty" dynamo:"sk,range"` // sk
 	Content   string    `json:"content" dynamo:"Content"`
 	UserAgent string    `dynamo:"UserAgent,omitempty"`
 	Meta      string    `json:"meta,omitempty" dynamo:"Meta"`
@@ -46,13 +51,14 @@ func New(region, tableName string) *DB {
 // AddUser ...
 func (db *DB) AddUser(username string) error {
 	username = strings.Trim(username, " ")
+	pk := pk(username)
 	u := &User{
-		PK:        usersPartitionKey,
+		ID:        pk,
 		CreatedAt: time.Now(),
 		Username:  username,
 	}
 	var exist *User
-	err := db.todo.Get("pk", usersPartitionKey).Range("sk", dynamo.Equal, username).One(&exist)
+	err := db.todo.Get("pk", pk).Range("sk", dynamo.Equal, username).One(&exist)
 
 	if err == nil && exist != nil {
 		log.Println("exists user. username: ", username)
@@ -62,7 +68,7 @@ func (db *DB) AddUser(username string) error {
 }
 
 func (db *DB) deleteUser(username string) error {
-	return db.todo.Delete("pk", usersPartitionKey).Range("sk", username).Run()
+	return db.todo.Delete("pk", pk(username)).Range("sk", username).Run()
 }
 
 // Create ...
@@ -88,8 +94,7 @@ func (db *DB) Update(t *Todo) error {
 
 // Delete ...
 func (db *DB) Delete(t *Todo) error {
-	return db.todo.Delete("pk", t.Username).Range("sk", t.CreatedAt).
-		Run()
+	return db.todo.Delete("pk", t.Username).Range("sk", t.CreatedAt).Run()
 }
 
 // Check ...
