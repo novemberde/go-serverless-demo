@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/novemberde/go-serverless-demo#readme",
   "devDependencies": {
-    "serverless": "^1.52.2",
+    "serverless": "^3.25.1",
     "serverless-apigw-binary": "^0.4.4"
   }
 }
